@@ -5,11 +5,12 @@ pydantic==2.5.3
 pydantic-settings==2.1.0
 python-multipart==0.0.6
 
-# LangChain 1.x with Google GenAI integration
+# LangChain 1.x with OpenAI integration
 # Requires Python 3.10+
 langchain>=1.0.0
 langchain-core>=0.3.0
 langchain-text-splitters>=0.3.0
+langchain-openai>=0.2.0
 langchain-google-genai>=3.0.0
 
 # Vector Store

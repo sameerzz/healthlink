@@ -101,35 +101,6 @@ IMPORTANT:
 The response should be structured, informative, and reassuring while maintaining medical responsibility.
 """
 
-    if settings.offline_mode:
-        logger.info("Summary agent running in OFFLINE_MODE")
-        top_specialty = (
-            doctor_recommendation.recommended_doctors[0].specialty
-            if doctor_recommendation.recommended_doctors
-            else "General Practice"
-        )
-        return HealthSummary(
-            summary=(
-                f"You reported {symptom_analysis.primary_complaint}. "
-                f"Based on offline rule-based analysis, urgency is {symptom_analysis.urgency_level}."
-            ),
-            key_findings=[
-                f"Symptoms: {symptoms_text or 'Not clearly identified'}",
-                f"Suggested specialty: {top_specialty}",
-                f"Suggested appointment: {slot_text}",
-            ],
-            recommended_actions=[
-                "Book the recommended consultation slot.",
-                "Monitor symptoms and seek emergency care if they worsen suddenly.",
-                "Carry relevant reports/medication list to appointment.",
-            ],
-            urgency_assessment=symptom_analysis.urgency_level,
-            disclaimer=(
-                "This is not a medical diagnosis. Please consult with healthcare "
-                "professionals for medical advice."
-            ),
-        )
-
     try:
         result = llm_generate(
             prompt=summary_prompt,

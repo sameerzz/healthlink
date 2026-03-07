@@ -124,18 +124,6 @@ def scheduling_agent(
             scheduling_notes="No available appointments at this time. Please contact the clinic directly."
         )
 
-    if settings.offline_mode:
-        logger.info("Scheduling agent running in OFFLINE_MODE")
-        recommended_slot = all_slots[0]
-        return SchedulingRecommendation(
-            available_slots=all_slots[:20],
-            recommended_slot=recommended_slot,
-            scheduling_notes=(
-                f"Offline rule-based scheduling selected earliest available slot "
-                f"for urgency level: {urgency_level}."
-            ),
-        )
-
     try:
         slot_summary = "\n".join([
             f"- {slot.doctor_name}: {slot.date} at {slot.time}"

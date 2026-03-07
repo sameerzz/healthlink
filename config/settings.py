@@ -16,11 +16,14 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
-    # LLM Configuration (Gemini only - using langchain-google-genai)
-    gemini_api_key: str = ""
-    llm_model_name: str = "gemini-2.0-flash"  # Latest stable model
+    # LLM Configuration
+    # Keep defaults in code; only secrets should be in .env / GitHub Secrets.
+    llm_provider: str = "openai"  # supported: openai, gemini
+    llm_model_name: str = "gpt-4o"
     llm_temperature: float = 0.2
     llm_max_tokens: int = 2048
+    openai_api_key: str = ""
+    gemini_api_key: str = ""
 
     # Embedding Configuration
     embedding_model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
@@ -49,6 +52,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     # Security
+    # Not currently used by auth middleware, but kept for future JWT/session use.
     secret_key: str = "dev-secret-key-change-in-production"
 
     # Google Cloud Configuration
@@ -58,14 +62,18 @@ class Settings(BaseSettings):
 
     # Feature Flags
     enable_metrics: bool = True
-    offline_mode: bool = False
 
     def validate_config(self) -> None:
         """Validate required configuration is present."""
-        if self.offline_mode:
-            return
-        if not self.gemini_api_key:
-            raise ValueError("GEMINI_API_KEY is required")
+        provider = self.llm_provider.lower()
+        if provider == "openai":
+            if not self.openai_api_key:
+                raise ValueError("OPENAI_API_KEY is required for llm_provider=openai")
+        elif provider == "gemini":
+            if not self.gemini_api_key:
+                raise ValueError("GEMINI_API_KEY is required for llm_provider=gemini")
+        else:
+            raise ValueError("LLM_PROVIDER must be one of: openai, gemini")
         if not self.pinecone_api_key:
             raise ValueError("PINECONE_API_KEY is required")
 

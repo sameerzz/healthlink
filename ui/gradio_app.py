@@ -42,7 +42,7 @@ def assess(
 ) -> dict[str, Any]:
     settings = get_settings()
     db_manager = get_db_manager(settings)
-    llm_client = None if settings.offline_mode else get_llm_client(settings)
+    llm_client = get_llm_client(settings)
 
     request = HealthAssessmentRequest(
         user_input=user_input,
@@ -91,4 +91,3 @@ def build_gradio() -> gr.Blocks:
 _ensure_seeded()
 gradio_ui = build_gradio()
 app = gr.mount_gradio_app(fastapi_app, gradio_ui, path="/gradio")
-

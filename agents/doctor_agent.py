@@ -16,31 +16,6 @@ from config.settings import Settings
 logger = logging.getLogger("healthlink.agents.doctor")
 
 
-def _infer_specialty_offline(symptom_analysis: SymptomExtraction) -> str:
-    text = " ".join([symptom_analysis.primary_complaint] + [s.name for s in symptom_analysis.symptoms]).lower()
-    rules = [
-        ("chest", "Cardiology"),
-        ("heart", "Cardiology"),
-        ("headache", "Neurology"),
-        ("migraine", "Neurology"),
-        ("skin", "Dermatology"),
-        ("rash", "Dermatology"),
-        ("stomach", "Gastroenterology"),
-        ("abdominal", "Gastroenterology"),
-        ("ear", "ENT"),
-        ("throat", "ENT"),
-        ("nose", "ENT"),
-        ("back pain", "Orthopedics"),
-        ("joint", "Orthopedics"),
-        ("anxiety", "Psychiatry"),
-        ("depression", "Psychiatry"),
-    ]
-    for key, specialty in rules:
-        if key in text:
-            return specialty
-    return "General Practice"
-
-
 def convert_doctor_model_to_schema(doctor_model: DoctorModel) -> Doctor:
     """Convert database model to Pydantic schema."""
     return Doctor(
@@ -86,23 +61,6 @@ def doctor_agent(
     if settings is None:
         from config.settings import get_settings
         settings = get_settings()
-
-    if settings.offline_mode:
-        logger.info("Doctor agent running in OFFLINE_MODE")
-        specialty = _infer_specialty_offline(symptom_analysis)
-        doctors_db = get_doctors_by_specialty(db_session, specialty)
-        if not doctors_db:
-            doctors_db = get_all_doctors(db_session)
-
-        doctors = [convert_doctor_model_to_schema(d) for d in doctors_db]
-        doctors.sort(key=lambda x: x.rating, reverse=True)
-        recommended_doctors = doctors[:max_recommendations]
-
-        return DoctorRecommendation(
-            recommended_doctors=recommended_doctors,
-            specialty_rationale=f"Offline rule-based matching selected {specialty}.",
-            match_score=0.7 if recommended_doctors else 0.0
-        )
 
     specialty_prompt = f"""Based on the following symptom analysis, determine the most appropriate medical specialty.
 

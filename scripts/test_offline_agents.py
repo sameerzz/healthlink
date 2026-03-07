@@ -1,5 +1,5 @@
 """
-Run all HealthLink agents in OFFLINE_MODE with one command.
+Run all HealthLink agents locally with one command.
 
 Usage:
   python scripts/test_offline_agents.py
@@ -39,8 +39,6 @@ def main() -> None:
     )
 
     settings = get_settings()
-    if not settings.offline_mode:
-        raise RuntimeError("Set OFFLINE_MODE=true in .env before running this script.")
 
     db_manager = get_db_manager(settings)
     doctors_csv = ROOT_DIR / "data" / "doctors.csv"
@@ -71,7 +69,7 @@ def main() -> None:
         settings=settings,
     )
 
-    print(f"OFFLINE_MODE={settings.offline_mode}")
+    print(f"LLM_PROVIDER={settings.llm_provider}")
     print(f"INPUT={user_input}")
     pretty("Symptom Agent", symptom_result.model_dump())
     pretty("Doctor Agent", doctor_result.model_dump())
@@ -81,4 +79,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
