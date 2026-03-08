@@ -36,28 +36,34 @@ async def lifespan(app: FastAPI):
         from core.database import seed_doctors
         import json
 
-        doctors_file = "./data/doctors.csv"
-        if os.path.exists(doctors_file):
-            import pandas as pd
-            doctors_df = pd.read_csv(doctors_file)
-            doctors_data = doctors_df.to_dict('records')
+        if settings.auto_seed_doctors_on_startup:
+            doctors_file = "./data/doctors.csv"
+            if os.path.exists(doctors_file):
+                import pandas as pd
+                doctors_df = pd.read_csv(doctors_file)
+                doctors_data = doctors_df.to_dict('records')
 
-            with db_manager.session_scope() as session:
-                seed_doctors(session, doctors_data)
-            logger.info("Database seeded with doctor data")
+                with db_manager.session_scope() as session:
+                    seed_doctors(session, doctors_data)
+                logger.info("Database seeded with doctor data")
+            else:
+                logger.warning(f"Doctors data file not found: {doctors_file}")
         else:
-            logger.warning(f"Doctors data file not found: {doctors_file}")
+            logger.info("Skipping doctor seed on startup (auto_seed_doctors_on_startup=false)")
 
     except Exception as e:
         logger.error(f"Database initialization failed: {e}", exc_info=True)
 
     try:
-        kb_file = "./data/symptoms_kb.json"
-        if os.path.exists(kb_file):
-            load_knowledge_base(kb_file, settings)
-            logger.info("Knowledge base loaded successfully")
+        if settings.auto_load_kb_on_startup:
+            kb_file = "./data/symptoms_kb.json"
+            if os.path.exists(kb_file):
+                load_knowledge_base(kb_file, settings)
+                logger.info("Knowledge base loaded successfully")
+            else:
+                logger.warning(f"Knowledge base file not found: {kb_file}")
         else:
-            logger.warning(f"Knowledge base file not found: {kb_file}")
+            logger.info("Skipping KB load on startup (auto_load_kb_on_startup=false)")
     except Exception as e:
         logger.error(f"RAG initialization failed: {e}", exc_info=True)
 

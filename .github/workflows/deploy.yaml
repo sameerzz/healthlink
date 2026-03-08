@@ -54,7 +54,7 @@ jobs:
             --timeout 300 \
             --max-instances 10 \
             --min-instances 0 \
-            --set-env-vars "LLM_PROVIDER=openai,LLM_MODEL_NAME=gpt-4o,LOG_LEVEL=INFO,OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},PINECONE_API_KEY=${{ secrets.PINECONE_API_KEY }}"
+            --set-env-vars "LLM_PROVIDER=openai,LLM_MODEL_NAME=gpt-4o,LOG_LEVEL=INFO,AUTO_LOAD_KB_ON_STARTUP=false,AUTO_SEED_DOCTORS_ON_STARTUP=true,OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},PINECONE_API_KEY=${{ secrets.PINECONE_API_KEY }}"
 
       - name: Get service URL
         run: |
