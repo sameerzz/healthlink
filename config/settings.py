@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     # Feature Flags
     enable_metrics: bool = True
     auto_seed_doctors_on_startup: bool = True
-    auto_load_kb_on_startup: bool = False
+    auto_load_kb_on_startup: bool = True
 
     def validate_config(self) -> None:
         """Validate required configuration is present."""
