@@ -1,0 +1,8 @@
+[
+  {"id": 1, "name": "Dr. Asha Mehta", "specialty": "General Medicine", "location": "Delhi"},
+  {"id": 2, "name": "Dr. Rohan Shah", "specialty": "Cardiology", "location": "Mumbai"},
+  {"id": 3, "name": "Dr. Neha Rao", "specialty": "Dermatology", "location": "Bengaluru"},
+  {"id": 4, "name": "Dr. Arjun Sen", "specialty": "General Medicine", "location": "Kolkata"},
+  {"id": 5, "name": "Dr. Priya Nair", "specialty": "Pediatrics", "location": "Chennai"},
+  {"id": 6, "name": "Dr. Kabir Sethi", "specialty": "Cardiology", "location": "Pune"}
+]

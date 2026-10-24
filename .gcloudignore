@@ -1,0 +1,6 @@
+.gcloudignore
+.git/
+.venv/
+**/__pycache__/
+terraform/
+.DS_Store
