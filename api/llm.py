@@ -1,24 +1,17 @@
 """One model client shared by the two agents that need an LLM."""
-import os
 from functools import lru_cache
 
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from config import ConfigurationError
+import config
 
 
 @lru_cache
 def get_model():
-    key = os.getenv("OPENROUTER_API_KEY", "").strip()
-    model = os.getenv("OPENROUTER_MODEL", "").strip()
-    if not key or not model:
-        raise ConfigurationError("Set OPENROUTER_API_KEY and OPENROUTER_MODEL in api/.env or the environment.")
     return ChatOpenAI(
-        api_key=key,
-        base_url="https://openrouter.ai/api/v1",
-        model=model,
+        **config.get_model_settings(),
         temperature=0,
         timeout=30,
         max_retries=1,

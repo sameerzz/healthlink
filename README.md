@@ -53,17 +53,35 @@ source .venv/bin/activate
 pip install -r api/requirements.txt -r frontend/requirements.txt
 ```
 
-Set these in `api/.env` (existing values are preserved):
+Copy the example configuration if you do not already have `api/.env`:
+
+```bash
+cp -n api/.env.example api/.env
+```
+
+Choose the provider and model once in `api/config.py`; all agents use them:
+
+```python
+MODEL_PROVIDER = "gemini"  # "openai", "openrouter", or "gemini" (alias: "google")
+MODEL_NAME = "your-provider-model-id"
+```
+
+Set the matching key in `api/.env`: `OPENAI_API_KEY` for OpenAI,
+`OPENROUTER_API_KEY` for OpenRouter, or `GEMINI_API_KEY` / `GOOGLE_API_KEY` for
+Gemini. If both Gemini keys are set, `GEMINI_API_KEY` takes precedence. Other
+providers' keys can remain empty. For example:
 
 ```dotenv
-OPENROUTER_API_KEY=your-key
-OPENROUTER_MODEL=provider/model-id
+GEMINI_API_KEY=your-key
 REDIS_URL=rediss://default:password@your-redis-host:6379/0
 ```
 
 `REDIS_URL` is the full Redis connection URL, including credentials; use the URL
 provided by your Redis service. A Redis HTTP/REST endpoint is not interchangeable.
 Environment variables take precedence over `.env`.
+Restart the API after changing configuration. The default provider remains
+OpenRouter, and existing `OPENROUTER_MODEL` values work until you set
+`MODEL_NAME` directly in `api/config.py`.
 
 Start the API:
 

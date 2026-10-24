@@ -4,3 +4,4 @@ langgraph==1.0.3
 langchain-openai==1.0.2
 python-dotenv==1.2.1
 redis==5.2.1
+
